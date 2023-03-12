@@ -1,0 +1,12 @@
+{
+	"name": "imba_spoken_numbers",
+	"scripts": {
+		"dev": "imba -w src/index.html",
+		"start": "npm run dev",
+		"build": "imba build src/index.html",
+		"preview": "npx http-server dist"
+	},
+	"devDependencies": {
+		"imba": "*"
+	}
+}
