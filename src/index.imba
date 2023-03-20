@@ -5,12 +5,13 @@ tag app
 	prop recalling? = false
 	prop answer = ""
 	prop index = 0
-	prop interval = 1000
+	prop interval = 1
+	prop score = -1
 
 	<self @recall=(do recalling? = true)>
-		<header>
-			<h1> "Spoken Numbers"
-		<body>
+		<div [m: 0 50px d:flex fld:column jc:left ai:center]>
+			<header>
+				<h1> "Spoken Numbers"
 			<div> if begining?
 				<label htmlFor="number-digits"> "Number of digits"
 					<input name="number-digits" type="number" bind=n_digits min=1>
@@ -21,6 +22,15 @@ tag app
 					<input name="number-digits-recall" type="text" bind=answer>
 				<button @click=verify!> "Verify"
 				<button @click=restart!> "Restart"
+
+			<div> if recalling? and score > -1
+				<div> "Digits : "
+				<div.digits [d:flex flw:wrap w:450px]>
+					for d, i in digits
+						let correct = d.toString! === answer[i]
+						<div [w:45px h:45px ta:center lh:45px box-sizing:border-box] [bgc:emerald4]=correct> "{d}"
+				<div.score>
+					"Score : {score} / {digits.length}"
 
 			for i in [0...10]
 				<audio.audio_digits src="/assets/{i}.mp3">
@@ -49,16 +59,26 @@ tag app
 
 				
 	def verify()
-		if answer === digits.join ''
-			console.log "woop woop"
+		let i = 0
+		score = 0
+		goal = digits.join('')
+
+		while i < digits.length
+			if goal[i] === answer[i]
+				score++
+			else
+				break
+			i++
+		
+		
 
 	def restart()
-		n_digits = 10
 		digits = []
 		begining? = true
 		recalling? = false
 		answer = ""
 		index = 0
 		interval = 1000
+		score = -1
 
 imba.mount <app>
